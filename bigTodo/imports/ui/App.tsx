@@ -1,20 +1,19 @@
 import React from 'react';
+import { withTracker } from "meteor/react-meteor-data";
+import { Tasks } from "../api/tasks";
+
 import { TaskItem } from './TaskItem';
 
-interface IApp { }
+interface IApp {
+  tasks: task[]
+}
 
-interface task {
+export interface task {
   _id: number
   text: string
 }
 
-const tasks: task[] = [
-  { _id: 1, text: 'This is task 1' },
-  { _id: 2, text: 'This is task 2' },
-  { _id: 3, text: 'This is task 3' },
-];
-
-export const App: React.FC<IApp> = () => {
+export const App: React.FC<IApp> = ({ tasks }) => {
   return (
     <div className="container">
       <header>
@@ -28,3 +27,7 @@ export const App: React.FC<IApp> = () => {
     </div>
   )
 }
+
+export const TrackedApp = withTracker(() => ({
+  tasks: Tasks.find({} as any).fetch()
+}))(App)
