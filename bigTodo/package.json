@@ -1,5 +1,5 @@
 {
-  "name": "bigTodo",
+  "name": "bigtodo",
   "private": true,
   "scripts": {
     "start": "meteor run",
