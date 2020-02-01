@@ -9,9 +9,10 @@ interface IApp {
 }
 
 export interface task {
-  _id: number
-  text: string,
-  createdAt: Date
+  _id: string
+  text: string
+  checked: boolean
+  createdAt?: Date
 }
 
 export const App: React.FC<IApp> = ({ tasks }) => {
@@ -32,8 +33,8 @@ export const App: React.FC<IApp> = ({ tasks }) => {
         </form>
       </header>
       <ul>
-        { tasks.map(({ _id, text }) => {
-          return <TaskItem key={ _id } text={ text } />
+        { tasks.map(({ _id, text, checked }) => {
+          return <TaskItem key={ _id } text={ text } checked={ checked } _id={ _id } />
         }) }
       </ul>
     </div>
@@ -48,6 +49,7 @@ export const App: React.FC<IApp> = ({ tasks }) => {
 
     Tasks.insert({
       text: inputTask.trim(),
+      checked: false,
       createdAt: new Date()
     })
 
