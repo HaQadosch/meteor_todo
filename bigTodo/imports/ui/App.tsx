@@ -6,6 +6,7 @@ import { TaskItem } from './TaskItem';
 
 interface IApp {
   tasks: task[]
+  incompleteCount: number
 }
 
 export interface task {
@@ -15,13 +16,22 @@ export interface task {
   createdAt?: Date
 }
 
-export const App: React.FC<IApp> = ({ tasks }) => {
+export const App: React.FC<IApp> = ({ tasks, incompleteCount }) => {
   const [inputTask, setInputTask] = useState<string>('')
+  const [hideCompleted, setHideCompleted] = useState<boolean>(false)
 
   return (
     <div className="container">
       <header>
-        <h1>Todo List</h1>
+        <h1>Todo List { incompleteCount }</h1>
+
+        <label className="hide-completed">
+          <input type="checkbox"
+            readOnly
+            checked={ hideCompleted }
+            onClick={ () => setHideCompleted(prev => !prev) }
+          />
+        </label>
 
         <form className="new-task" onSubmit={ handleSubmit }>
           <input
@@ -33,9 +43,14 @@ export const App: React.FC<IApp> = ({ tasks }) => {
         </form>
       </header>
       <ul>
-        { tasks.map(({ _id, text, checked }) => {
-          return <TaskItem key={ _id } text={ text } checked={ checked } _id={ _id } />
-        }) }
+        {
+          (hideCompleted
+            ? tasks.filter(({ checked }) => !checked)
+            : tasks
+          ).map(({ _id, text, checked }) => {
+            return <TaskItem key={ _id } text={ text } checked={ checked } _id={ _id } />
+          })
+        }
       </ul>
     </div>
   )
@@ -58,5 +73,6 @@ export const App: React.FC<IApp> = ({ tasks }) => {
 }
 
 export const TrackedApp = withTracker(() => ({
-  tasks: Tasks.find({} as any, { sort: { createdAt: -1 } }).fetch()
+  tasks: Tasks.find({} as any, { sort: { createdAt: -1 } }).fetch(),
+  incompleteCount: Tasks.find({ checked: { $ne: true } }).count()
 }))(App)
