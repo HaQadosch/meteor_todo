@@ -3,6 +3,7 @@ import { withTracker } from "meteor/react-meteor-data";
 import { Tasks } from "../api/tasks";
 
 import { TaskItem } from './TaskItem';
+import { AccountsUIWrapper } from './AccountsUIWrapper';
 
 interface IApp {
   tasks: task[]
@@ -32,6 +33,8 @@ export const App: React.FC<IApp> = ({ tasks, incompleteCount }) => {
             onClick={ () => setHideCompleted(prev => !prev) }
           />
         </label>
+
+        <AccountsUIWrapper />
 
         <form className="new-task" onSubmit={ handleSubmit }>
           <input
